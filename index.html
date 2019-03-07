@@ -1,142 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-  <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<link rel="stylesheet" href= "css/styles.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>GifTastic</h1>
+        <p>Click a button or type and add your own!!</p>
+      </div>
 
-<div class="container">
-    <h1>Click an animal and see GIFs!</h1>
+      <!-- Buttons go here -->
+      <div class="btn-group btn-group-lg">
+        <div id="buttons-view"></div>
+        <br />
 
-  <!-- Buttons go here -->
-  <div class="btn-group btn-group-lg">
-  <div id="buttons-view"></div><br>
+        <!-- Form that will make the button -->
+        <form id="button-form">
+          <label for="button-input">Add an animal</label>
+          <input type="text" id="button-input" /><br />
 
-  <!-- Form that will make the button -->
-  <form id="button-form">
-    <label for="button-input">Add an animal</label>
-    <input type="text" id="button-input"><br>
+          <!-- This will add another button -->
+          <input id="add-animal" type="submit" value="Submit" />
+        </form>
+      </div>
 
-  <!-- This will add another button -->
-    <input id="add-animal" type="submit" value="Submit">
-  </form>
-  </div>
+      <!-- Gifs go here -->
+      <div id="gif-view"></div>
+    </div>
 
-  <!-- Gifs go here -->
-  <div id ="gif-view"></div>
-</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      //Array of buttons
+      var topics = ["Dogs", "Cats"];
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script type="text/javascript">
-  //Array of buttons
-    var topics = ["Dogs", "Cats"];
+      //This will put gif URL into the html
+      function displayGif() {
+        var animal = $(this).attr("data-name");
+        var queryURL =
+          "https://api.giphy.com/v1/gifs/search?q=" +
+          animal +
+          "&api_key=dc6zaTOxFJmzC&limit=10";
 
-  //This will put gif URL into the html
-    function displayGif(){
-      var animal = $(this).attr("data-name");
-      var queryURL= "https://api.giphy.com/v1/gifs/search?q="
-      + animal + "&api_key=dc6zaTOxFJmzC&limit=10";
+        //Calls Ajax
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function(response) {
+          console.log(response);
+          response.data.forEach(function(gifObject) {
+            //Create new image tag
+            var img = $("<img>");
+            //Add class Image to all images
+            img.addClass("image");
+            //Define rating
+            rating = gifObject.rating;
+            //Animate or still variables
+            var urlStill = gifObject.images.fixed_height_still.url;
+            var urlAnimate = gifObject.images.fixed_height.url;
+            var ratingPtag = $("<p>").text("Rating: " + rating);
+            //display non moving
+            img.attr("src", gifObject.images.fixed_height_still.url);
+            img.attr("data-animate", urlAnimate);
+            img.attr("data-still", urlStill);
+            img.attr("data-state", "still");
 
-  //Calls Ajax
-    $.ajax({
-      url: queryURL,
-      method: "GET"
-      }).then(function(response) { 
-      console.log(response);
-      response.data.forEach(function(gifObject){
-        //Create new image tag
-        var img = $('<img>')
-        //Add class Image to all images
-        img.addClass("image");
-        //Define rating 
-        rating = gifObject.rating;
-        //Animate or still variables
-        var urlStill = gifObject.images.fixed_height_still.url
-        var urlAnimate= gifObject.images.fixed_height.url
-        var ratingPtag = $('<p>').text("Rating: " + rating)
-        //display non moving 
-        img.attr('src', gifObject.images.fixed_height_still.url);
-        img.attr('data-animate', urlAnimate);
-        img.attr('data-still', urlStill);
-        img.attr('data-state', "still");
+            //Issue where every other Gif will animate
 
-      //Issue where every other Gif will animate
-     
+            //Add rating and image to gif-view Div
+            $("#gif-view").prepend(ratingPtag, img);
 
-      //Add rating and image to gif-view Div
-      $('#gif-view').prepend(ratingPtag, img);      
-            
-            
-      //When clicking on image change state
-      $(".image").on('click', function(){
-      var state = $(this).attr("data-state");
-      if (state === "still") {
-        $(this).attr("src", $(this).attr("data-animate"));
-        $(this).attr("data-state", "animate");
-       } 
-      else {
-        $(this).attr("src", $(this).attr("data-still"));
-        $(this).attr("data-state", "still");
+            //When clicking on image change state
+            $(".image").on("click", function() {
+              var state = $(this).attr("data-state");
+              if (state === "still") {
+                $(this).attr("src", $(this).attr("data-animate"));
+                $(this).attr("data-state", "animate");
+              } else {
+                $(this).attr("src", $(this).attr("data-still"));
+                $(this).attr("data-state", "still");
+              }
+            });
+          });
+        });
+      }
+
+      //This makes the buttons
+      function makeButtons() {
+        //empty
+        $("#buttons-view").empty();
+        //Loop for array of items
+        for (var i = 0; i < topics.length; i++) {
+          //Make buttons using input
+          var a = $("<button>");
+          //Adds a class of animaltype to each button
+          a.addClass("animalType");
+          //Data-attribute
+          a.attr("data-name", topics[i]);
+          //Provides the intial text on the button
+          a.text(topics[i]);
+          //Buttons appear in div
+          $("#buttons-view").append(a);
         }
-      })
-      })         
+      }
+
+      //Function is ran when add animal button is clicked
+      $("#add-animal").on("click", function(event) {
+        event.preventDefault();
+        //Take text from unput
+        var animal = $("#button-input")
+          .val()
+          .trim();
+        //Put the input into the array
+        topics.push(animal);
+        //Make the button appear
+        makeButtons();
+        //Clear input value
+        $("#button-input").val("");
       });
-      };
 
+      //Add click event listener to all elements with a class of animalType
+      $(document).on("click", ".animalType", displayGif);
 
-
- 
-
-  //This makes the buttons
-    function makeButtons(){
-
-    //empty
-      $('#buttons-view').empty();
-    //Loop for array of items
-      for (var i =0; i<topics.length; i++){
-    //Make buttons using input
-      var a = $("<button>");
-      //Adds a class of animaltype to each button
-      a.addClass("animalType");
-      //Data-attribute
-      a.attr("data-name", topics[i]);
-      //Provides the intial text on the button
-      a.text(topics[i]);
-      //Buttons appear in div
-      $("#buttons-view").append(a);
-    }
-  }
-
-    //Function is ran when add animal button is clicked
-    $("#add-animal").on("click", function(event){
-    event.preventDefault();
-    //Take text from unput
-    var animal = $("#button-input").val().trim();
-    //Put the input into the array
-    topics.push(animal);
-    //Make the button appear
-    makeButtons();
-    //Clear input value
-    $("#button-input").val("");  
-  });
-
-  //Add click event listener to all elements with a class of animalType
-    $(document).on("click", ".animalType", displayGif);
-
-  //Display the initial buttons
-    makeButtons();
-    $('#add-animal').empty();
-    
-</script>
-
-  
-
-
-</body>
+      //Display the initial buttons
+      makeButtons();
+      $("#add-animal").empty();
+    </script>
+  </body>
 </html>
