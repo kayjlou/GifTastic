@@ -1,0 +1,16 @@
+body {
+  background-color: lightblue;
+}
+
+.header {
+  text-align: center;
+}
+
+#buttons-view {
+  text-align: center;
+}
+
+button {
+  background-color: lightcoral;
+  font-size: 20px;
+}
