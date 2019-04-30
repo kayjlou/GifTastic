@@ -1,16 +1,30 @@
 body {
-  background-color: lightblue;
+  /* background-image: url("../assets/images/background.jpg"); */
+  background-repeat: repeat;
+  background: gray;
 }
 
 .header {
   text-align: center;
+  background-color: white;
+  border: 5px solid black;
+  width: 50%;
+  margin: auto;
 }
 
 #buttons-view {
+  padding: 20px;
   text-align: center;
+  margin: auto;
 }
 
 button {
-  background-color: lightcoral;
+  /* padding: 10px; */
+  background-color: blanchedalmond;
   font-size: 20px;
+  border-radius: 10%;
+  -webkit-border-radius: 10%;
+  -moz-border-radius: 10%;
+  -ms-border-radius: 10%;
+  -o-border-radius: 10%;
 }

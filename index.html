@@ -22,18 +22,19 @@
       </div>
 
       <!-- Buttons go here -->
-      <div class="btn-group btn-group-lg">
-        <div id="buttons-view"></div>
-        <br />
+      <div class="btnContainer">
+        <div class="btn-group btn-group-lg">
+          <div id="buttons-view"></div>
 
-        <!-- Form that will make the button -->
-        <form id="button-form">
-          <label for="button-input">Add an animal</label>
-          <input type="text" id="button-input" /><br />
+          <!-- Form that will make the button -->
+          <form id="button-form">
+            <label for="button-input">Add an animal</label>
+            <input type="text" id="button-input" /><br />
 
-          <!-- This will add another button -->
-          <input id="add-animal" type="submit" value="Submit" />
-        </form>
+            <!-- This will add another button -->
+            <input id="add-animal" type="submit" value="Submit" />
+          </form>
+        </div>
       </div>
 
       <!-- Gifs go here -->
@@ -41,9 +42,10 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
     <script type="text/javascript">
       //Array of buttons
-      var topics = ["Dogs", "Cats"];
+      var topics = ["Dogs", "Cats", "Giraffe"];
 
       //This will put gif URL into the html
       function displayGif() {
